@@ -233,9 +233,9 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 /* ───────────── Constants ───────────── */
 const UNIT_CM = 40;                 // 1 world unit = 40 cm (plinth ≈ 1.8 m across)
-const S = 1.25;                     // simulation unit → world unit
-const CENTER = new THREE.Vector3(0, 3.3, 0);
-const BALL_R = 0.24;                // world radius (≈ 19 cm diameter)
+const S = 1.4;                      // simulation unit → world unit
+const CENTER = new THREE.Vector3(0, 3.5, 0);
+const BALL_R = 0.34;                // world radius (≈ 27 cm diameter)
 const PLINTH_TOP = 1.1;
 const COIL_COUNT = 12, COIL_RING = 1.8, COIL_TOP = PLINTH_TOP + 0.37;
 const TIME_RATE = 1.4;              // sim units per real second at 1×
@@ -252,8 +252,8 @@ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
    (anisotropic harmonic well), like-pole magnetic repulsion B/r², and a steep
    contact core so the balls never interpenetrate. All forces are conservative,
    so energy error is a real accuracy readout. */
-const SIG = 0.41, SIG16 = SIG ** 16;          // contact core radius (sim units)
-const CHAOS = { k: 0.3, ky: 0.6, B: 0.26 };
+const SIG = 0.51, SIG16 = SIG ** 16;          // contact core radius (sim units), just above 2·BALL_R/S
+const CHAOS = { k: 0.3, ky: 0.6, B: 0.35 };
 const phys = {
   p: new Float64Array(9), v: new Float64Array(9), a: new Float64Array(9),
   G: 1, k: 0, ky: 0, B: 0, rW: 1.75, wK: 40, eps2: 1e-4,
@@ -436,9 +436,9 @@ scene.background = new THREE.Color(0x0a0c0f);
 scene.fog = new THREE.FogExp2(0x0a0c0f, 0.045);
 
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 120);
-camera.position.set(7.2, 5.0, 8.2);
+camera.position.set(6.6, 5.0, 7.5);
 const controls = new OrbitControls(camera, canvas);
-controls.target.set(0, 2.7, 0);
+controls.target.set(0, 2.9, 0);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.minDistance = 3.2;
@@ -635,16 +635,16 @@ addEventListener('resize', resize);
 resize();
 const viewScale = () => (camera.aspect < 0.8 ? 1.3 : 1);   // pull back on portrait screens
 {
-  const t = new THREE.Vector3(0, 2.7, 0);
-  camera.position.set(7.2, 5.0, 8.2).sub(t).multiplyScalar(viewScale()).add(t);
+  const t = new THREE.Vector3(0, 2.9, 0);
+  camera.position.set(6.6, 5.0, 7.5).sub(t).multiplyScalar(viewScale()).add(t);
 }
 
 /* ───────────── Camera views ───────────── */
 const VIEWS = {
-  orbit: { pos: [7.2, 5.0, 8.2], tgt: [0, 2.7, 0] },
-  front: { pos: [0, 3.1, 10.5], tgt: [0, 2.9, 0] },
-  top:   { pos: [0, 12.5, 0.02], tgt: [0, 2.6, 0] },
-  low:   { pos: [3.2, 0.5, 5.0], tgt: [0, 3.3, 0] },
+  orbit: { pos: [6.6, 5.0, 7.5], tgt: [0, 2.9, 0] },
+  front: { pos: [0, 3.3, 10.0], tgt: [0, 3.1, 0] },
+  top:   { pos: [0, 12.5, 0.02], tgt: [0, 2.8, 0] },
+  low:   { pos: [3.2, 0.5, 5.0], tgt: [0, 3.5, 0] },
 };
 let tween = null;
 function goView(name) {
